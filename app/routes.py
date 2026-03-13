@@ -4,6 +4,7 @@ from fastapi.responses import PlainTextResponse
 from dotenv import load_dotenv
 
 from app.models import WebhookBody
+from app.whatsapp_service import send_message
 
 load_dotenv()
 router = APIRouter()
@@ -39,6 +40,12 @@ async def receive_message(body: WebhookBody):
         print("Mensaje recibido")
         print("Telefono:", phone_number)
         print("Texto:", text)
+
+        if text:
+            await send_message(
+                to=phone_number,
+                message=f"Recibí tu mensaje: {text}"
+            )
 
     except Exception as e:
         print("Error procesando webhook:", e)
